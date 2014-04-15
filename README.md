@@ -1,4 +1,4 @@
-This Augmented reality engine is based off of https://github.com/calonso/ios-arkit
+This Augmented Reality Location Based Engine is based off of https://github.com/calonso/ios-arkit
 
 - I have added a distance label to each location pointer
 - I have added a slider to control range.
