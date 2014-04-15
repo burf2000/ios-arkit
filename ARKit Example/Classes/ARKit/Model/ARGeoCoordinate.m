@@ -17,7 +17,8 @@
 
 @synthesize dataObject;
 
-- (float)angleFromCoordinate:(CLLocationCoordinate2D)first toCoordinate:(CLLocationCoordinate2D)second {
+- (float)angleFromCoordinate:(CLLocationCoordinate2D)first toCoordinate:(CLLocationCoordinate2D)second
+{
 	float longitudinalDifference = second.longitude - first.longitude;
 	float latitudinalDifference = second.latitude - first.latitude;
 	float possibleAzimuth = (M_PI * .5f) - atan(latitudinalDifference / longitudinalDifference);

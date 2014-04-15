@@ -38,7 +38,10 @@ CGFloat ACCELEROMETER_UPDATE_FREQUENCY = 20; // Hz
         scaleViewsBasedOnDistance = conf.scaleViewsBasedOnDistance;
         minimumScaleFactor = conf.minimumScaleFactor;
         NSAssert(minimumScaleFactor >= 0.0 && minimumScaleFactor <= 1.0, @"Minimum Scale Factor must be between 0.0 and 1.0!!");
-        if (minimumScaleFactor == 1.0) NSLog(@"WARNING!!! Minimum Scale Factor will make AR points size 0");
+        
+        if (minimumScaleFactor == 1.0)
+            NSLog(@"WARNING!!! Minimum Scale Factor will make AR points size 0");
+        
         rotateViewsBasedOnPerspective = conf.rotateViewsBasedOnPerspective;
         maximumRotationAngle = conf.maximumRotationAngle;
         updateFrequency = conf.updateFrequency;
@@ -86,6 +89,7 @@ CGFloat ACCELEROMETER_UPDATE_FREQUENCY = 20; // Hz
         
         
         // Device's screen size (ignoring rotation intentionally):
+        // SNRB change this for size of screen
         CGSize screenSize = [[UIScreen mainScreen] bounds].size;
         
         // iOS is going to calculate a size which constrains the 4:3 aspect ratio
@@ -124,7 +128,8 @@ CGFloat ACCELEROMETER_UPDATE_FREQUENCY = 20; // Hz
     return self;
 }
 
-- (void) addExtraView:(UIView *)extra {   
+- (void) addExtraView:(UIView *)extra
+{
 	[ar_overlayView addSubview:extra];
     [ar_overlayView bringSubviewToFront:extra];
     extra.layer.zPosition = 1000;
@@ -132,10 +137,13 @@ CGFloat ACCELEROMETER_UPDATE_FREQUENCY = 20; // Hz
 
 #pragma mark - Coordinates storage management
 
-- (void)addCoordinate:(ARGeoCoordinate *)coordinate {
-	[ar_coordinates addObject:coordinate];
+- (void)addCoordinate:(ARGeoCoordinate *)coordinate
+{
+	
+    [ar_coordinates addObject:coordinate];
     
-	if (coordinate.radialDistance > maximumScaleDistance) {
+	if (coordinate.radialDistance > maximumScaleDistance)
+    {
 		maximumScaleDistance = coordinate.radialDistance;
 	}
 	
@@ -151,7 +159,8 @@ CGFloat ACCELEROMETER_UPDATE_FREQUENCY = 20; // Hz
 	}
     
     [coordinate calibrateUsingOrigin:centerCoordinate.geoLocation useAltitude:useAltitude];
-    if (coordinate.radialDistance > maximumScaleDistance) {
+    if (coordinate.radialDistance > maximumScaleDistance)
+    {
         maximumScaleDistance = coordinate.radialDistance;
         radar.farthest = maximumScaleDistance;
     }
@@ -163,7 +172,8 @@ CGFloat ACCELEROMETER_UPDATE_FREQUENCY = 20; // Hz
 	}
 }
 
-- (void)removeCoordinate:(ARGeoCoordinate *)coordinate {
+- (void)removeCoordinate:(ARGeoCoordinate *)coordinate
+{
     NSUInteger indexToRemove = [ar_coordinates indexOfObject:coordinate];
     if (indexToRemove != NSNotFound) {
         [ar_coordinates removeObjectAtIndex:indexToRemove];
@@ -194,7 +204,8 @@ CGFloat ACCELEROMETER_UPDATE_FREQUENCY = 20; // Hz
     [ar_floorCoordinateViews removeAllObjects];
 }
 
-NSComparisonResult LocationSortClosestFirst(ARGeoCoordinate *s1, ARGeoCoordinate *s2, void *ignore) {
+NSComparisonResult LocationSortClosestFirst(ARGeoCoordinate *s1, ARGeoCoordinate *s2, void *ignore)
+{
     if (s1.radialDistance < s2.radialDistance) {
 		return NSOrderedAscending;
 	} else if (s1.radialDistance > s2.radialDistance) {
@@ -206,7 +217,8 @@ NSComparisonResult LocationSortClosestFirst(ARGeoCoordinate *s1, ARGeoCoordinate
 
 #pragma mark - Simulation Control 
 
-- (BOOL)viewportContainsCoordinate:(ARGeoCoordinate *)coordinate {
+- (BOOL)viewportContainsCoordinate:(ARGeoCoordinate *)coordinate
+{
 	double centerAzimuth = centerCoordinate.azimuth;
 	double leftEdgeAzimuth = centerAzimuth - VIEWPORT_WIDTH_RADIANS / 2.0 - VIEWPORT_EXTRA_WIDTH_MARGIN;
 
@@ -235,7 +247,8 @@ NSComparisonResult LocationSortClosestFirst(ARGeoCoordinate *s1, ARGeoCoordinate
 	return result;
 }
 
-- (void) doStart {
+- (void) doStart
+{
     [loadingView removeFromSuperview];
     
     // Find the top window (that is not an alert view or other window)
@@ -278,7 +291,8 @@ NSComparisonResult LocationSortClosestFirst(ARGeoCoordinate *s1, ARGeoCoordinate
 	}
 }
 
-- (void)startListening {
+- (void)startListening
+{
 	
 	//start our heading readings and our accelerometer readings.
     
@@ -375,14 +389,16 @@ NSComparisonResult LocationSortClosestFirst(ARGeoCoordinate *s1, ARGeoCoordinate
     }
 }
 
-- (void) hide {
+- (void) hide
+{
 	[_updateTimer invalidate];
     _updateTimer = nil;
     [[LocalizationHelper sharedHelper] deregisterForUpdates:self];
 	[baseViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
-- (CGPoint)pointInView:(UIView *)realityView forCoordinate:(ARGeoCoordinate *)coordinate {
+- (CGPoint)pointInView:(UIView *)realityView forCoordinate:(ARGeoCoordinate *)coordinate
+{
 	
 	CGPoint point;
 	
@@ -411,7 +427,8 @@ NSComparisonResult LocationSortClosestFirst(ARGeoCoordinate *s1, ARGeoCoordinate
 	return point;
 }
 
-- (void)updateLocations:(NSTimer *)timer {
+- (void)updateLocations:(NSTimer *)timer
+{
     [radar updatePoints:centerCoordinate];
     
 	if (!ar_coordinateViews || ar_coordinateViews.count == 0) {
@@ -464,8 +481,10 @@ NSComparisonResult LocationSortClosestFirst(ARGeoCoordinate *s1, ARGeoCoordinate
 
 #pragma mark - Views rendering methods
 
-- (void)resetView:(UIView *)theView value:(CGFloat)scaleValue {
-	if (theView.superview) {
+- (void)resetView:(UIView *)theView value:(CGFloat)scaleValue
+{
+	if (theView.superview)
+    {
 		CGFloat scaleFactor = 1.0;
         theView.layer.transform = CATransform3DIdentity;
 		if (scaleViewsBasedOnDistance && [ar_coordinateViews containsObject:theView]) {
@@ -499,46 +518,69 @@ NSComparisonResult LocationSortClosestFirst(ARGeoCoordinate *s1, ARGeoCoordinate
     }
 }
 
-- (void) frontPositioning:(ARObjectView *)theView atCoordinate:(ARGeoCoordinate *)coord {
-	if (theView.displayed && [self viewportContainsCoordinate:coord]) {
-		CGPoint loc = [self pointInView:ar_overlayView forCoordinate:coord];
-        
-		CGFloat scaleFactor = 1.0;
-		if (scaleViewsBasedOnDistance) {
-			scaleFactor = 1.0 - minimumScaleFactor * (coord.radialDistance / maximumScaleDistance);
-		}
-		
-		float width = theView.bounds.size.width;
-		float height = theView.bounds.size.height;
-		
-		if (!(theView.superview)) {
-			width = theView.bounds.size.width * scaleFactor;
-			height = theView.bounds.size.height * scaleFactor;
-		}
-		
-		theView.frame = CGRectMake(loc.x - width / 2.0, loc.y - height / 2.0, width, height);
-        
-		if (rotateViewsBasedOnPerspective) {
-            CATransform3D transform = CATransform3DIdentity;
+- (void) frontPositioning:(ARObjectView *)theView atCoordinate:(ARGeoCoordinate *)coord
+{
+	if (theView.displayed && [self viewportContainsCoordinate:coord]  )
+    {
+        if (coord.radialDistance < self.MAX_DISTANCE)
+        {
+            CGPoint loc = [self pointInView:ar_overlayView forCoordinate:coord];
             
-			transform.m34 = 1.0 / 300.0;
-			// TODO fix rotation angle
-			double itemAzimuth = coord.azimuth;
-			double centerAzimuth = centerCoordinate.azimuth;
-			if (itemAzimuth - centerAzimuth > M_PI) centerAzimuth += 2*M_PI;
-			if (itemAzimuth - centerAzimuth < -M_PI) itemAzimuth += 2*M_PI;
-			
-			double angleDifference = itemAzimuth - centerAzimuth;
-			transform = CATransform3DRotate(transform, maximumRotationAngle * angleDifference / (VIEWPORT_WIDTH_RADIANS / 2.0) , 0, 1, 0);
-            theView.layer.transform = transform;
-		}
-		//if we don't have a superview, set it up.
-		if (!(theView.superview)) {
-			[ar_overlayView addSubview:theView];
-			[ar_overlayView sendSubviewToBack:theView];
-		}
-		
-	} else {
+            CGFloat scaleFactor = 1.0;
+            if (scaleViewsBasedOnDistance)
+            {
+                scaleFactor = 1.0 - minimumScaleFactor * (coord.radialDistance / self.MAX_DISTANCE);
+            }
+            
+            float width = theView.bounds.size.width;
+            float height = theView.bounds.size.height;
+            
+            //if (!(theView.superview)) {
+                //width = theView.bounds.size.width * scaleFactor;
+                //height = theView.bounds.size.height * scaleFactor;
+                
+                //NSLog(@"%f %f %f",width,  height, scaleFactor);
+                width = 177 * scaleFactor;
+                height = 149 * scaleFactor;
+            
+            //}
+            NSString *text = [NSString stringWithFormat:@"%0.1f km" ,coord.radialDistance / 1000];
+            theView.distanceLabel.text = text;
+            
+            theView.frame = CGRectMake(loc.x - width / 2.0, loc.y - height / 2.0, width, height);
+            
+            if (rotateViewsBasedOnPerspective) {
+                CATransform3D transform = CATransform3DIdentity;
+                
+                transform.m34 = 1.0 / 300.0;
+                // TODO fix rotation angle
+                
+                double itemAzimuth = coord.azimuth;
+                double centerAzimuth = centerCoordinate.azimuth;
+                if (itemAzimuth - centerAzimuth > M_PI) centerAzimuth += 2*M_PI;
+                if (itemAzimuth - centerAzimuth < -M_PI) itemAzimuth += 2*M_PI;
+                
+                double angleDifference = itemAzimuth - centerAzimuth;
+                transform = CATransform3DRotate(transform, maximumRotationAngle * angleDifference / (VIEWPORT_WIDTH_RADIANS / 2.0) , 0, 1, 0);
+                theView.layer.transform = transform;
+            }
+            //if we don't have a superview, set it up.
+            
+            //theView.hidden = NO;
+            if (!(theView.superview))
+            {
+                [ar_overlayView addSubview:theView];
+                [ar_overlayView sendSubviewToBack:theView];
+            }
+        }
+        else
+        {
+            [theView removeFromSuperview];
+        }
+        
+    }
+    else
+    {
 		[self resetView:theView value:coord.radialDistance];
 	}
 }
@@ -565,7 +607,8 @@ NSComparisonResult LocationSortClosestFirst(ARGeoCoordinate *s1, ARGeoCoordinate
     } else {
         BOOL willStart;
         
-        if (!centerCoordinate) {
+        if (!centerCoordinate)
+        {
             // TODO only update if change is significant
             willStart = YES;
             centerCoordinate = [ARGeoCoordinate coordinateWithLocation:location];
@@ -575,13 +618,17 @@ NSComparisonResult LocationSortClosestFirst(ARGeoCoordinate *s1, ARGeoCoordinate
         }
         
         maximumScaleDistance = 0.0;
-        for (ARGeoCoordinate *geoLocation in ar_coordinates) {
+        for (ARGeoCoordinate *geoLocation in ar_coordinates)
+        {
             [geoLocation calibrateUsingOrigin:location useAltitude:useAltitude];
-            if (geoLocation.radialDistance > maximumScaleDistance) {
+            // SNRB
+            if (geoLocation.radialDistance > maximumScaleDistance  && geoLocation.radialDistance  < self.MAX_DISTANCE)
+            {
                 maximumScaleDistance = geoLocation.radialDistance;
             }
         }
-        radar.farthest = maximumScaleDistance;
+        // SNRB need to review so items dont go off map
+        radar.farthest = self.MAX_DISTANCE;
         
         if (willStart) {
             [self doStart];
@@ -590,8 +637,10 @@ NSComparisonResult LocationSortClosestFirst(ARGeoCoordinate *s1, ARGeoCoordinate
 }
 
 
-- (void) headingFound:(CLHeading *)newHeading {
-    if (newHeading.headingAccuracy == -1.0) {
+- (void) headingFound:(CLHeading *)newHeading
+{
+    if (newHeading.headingAccuracy == -1.0)
+    {
         NSLog(@"Invalid heading");
     } else {
         double value = newHeading.magneticHeading + radiansToDegrees(orientationSupporter.rotationAngle);

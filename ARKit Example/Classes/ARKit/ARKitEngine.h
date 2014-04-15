@@ -14,6 +14,8 @@
 #import "RadarView.h"
 #import "ARKitConfig.h"
 
+
+
 @class ARObjectView;
 
 typedef struct {
@@ -67,6 +69,8 @@ typedef enum {
     
     UIView *loadingView;
 }
+
+@property (nonatomic) float MAX_DISTANCE;
 
 - (id) initWithConfig:(ARKitConfig *) conf;
 

@@ -18,4 +18,8 @@
     DetailView *currentDetailView;
 }
 
+@property (nonatomic, strong) IBOutlet UISlider *slider;
+
+- (IBAction)sliderChanged;
+
 @end

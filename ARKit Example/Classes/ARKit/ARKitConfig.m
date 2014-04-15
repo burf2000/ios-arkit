@@ -10,7 +10,7 @@
 
 static const BOOL DEFAULT_SHOWS_FLOOR_IMAGES_CONFIG                 = YES;
 static const BOOL DEFAULT_SCALE_VIEWS_BASED_ON_DISTANCE_CONFIG      = YES;
-static const CGFloat DEFAULT_MINIMUM_SCALE_FACTOR_CONFIG            = 0.5;
+static const CGFloat DEFAULT_MINIMUM_SCALE_FACTOR_CONFIG            = 0.5; // SNRB LOOK AT
 static const BOOL DEFAULT_ROTATE_VIEWS_BASED_ON_PERSPECTIVE_CONFIG  = YES;
 static const CGFloat DEFAULT_MAXIMUM_ROTATION_ANGLE_CONFIG          = M_PI / 6.0;
 static const CGFloat DEFAULT_UPDATE_FREQUENCY_CONFIG                = 1.0 / 20.0;
@@ -20,7 +20,8 @@ static const UIInterfaceOrientation DEFAULT_ORIENTATION_CONFIG      = UIInterfac
 
 @implementation ARKitConfig
 
-+ (ARKitConfig *) defaultConfigFor:(id<ARViewDelegate>) delegate {
++ (ARKitConfig *) defaultConfigFor:(id<ARViewDelegate>) delegate
+{
     
     ARKitConfig *config = [[ARKitConfig alloc] init];
     config.showsFloorImages = DEFAULT_SHOWS_FLOOR_IMAGES_CONFIG;

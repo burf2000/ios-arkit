@@ -15,4 +15,6 @@
 @property (nonatomic, weak) ARKitEngine *controller;
 @property (nonatomic) BOOL displayed;
 
+@property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UILabel *distanceLabel;
 @end

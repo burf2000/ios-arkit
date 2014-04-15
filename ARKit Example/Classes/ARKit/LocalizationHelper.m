@@ -14,7 +14,8 @@ static LocalizationHelper *sharedHelper;
 
 #pragma mark - Singleton Initialization
 
-+ (LocalizationHelper *) sharedHelper {
++ (LocalizationHelper *) sharedHelper
+{
 	@synchronized ([LocalizationHelper class]) {
 		if (!sharedHelper) {
 			sharedHelper = [[LocalizationHelper alloc] init];
